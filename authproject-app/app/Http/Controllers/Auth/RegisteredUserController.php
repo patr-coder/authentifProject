@@ -1,5 +1,7 @@
 <?php
 
+
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -48,7 +50,8 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        $user->notify(new UserRegisteredNotification());
+        $post = ['title'=> 'super title'];
+        $user->notify(new UserRegisteredNotification($user, $post));
 
         Auth::login($user);
 

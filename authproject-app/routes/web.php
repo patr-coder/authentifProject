@@ -18,8 +18,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/foo',[TestController::class,'foo']);
-Route::get('/bar',[TestController::class,'bar']);
+route::get('/foo',[TestController::class,'foo']);
+route::get('/bar',[TestController::class,'bar']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

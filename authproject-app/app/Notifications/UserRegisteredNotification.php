@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Mail\TestNotificationMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -11,13 +12,18 @@ class UserRegisteredNotification extends Notification
 {
     use Queueable;
 
+    public $post;
+    public $user;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($user, $post)
     {
+        $this->user = $user;
+        $this->post = $post;
         //
     }
 
@@ -29,7 +35,7 @@ class UserRegisteredNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -40,10 +46,15 @@ class UserRegisteredNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+       
+       
+       
+       return (new TestNotificationMail($notifiable, $this->post))
+       ->to($notifiable->email);
+       // return (new MailMessage)
+                   // ->line(' Notification pour l\'utilisateur'. $notifiable->name. 'pour le post '. $this->post['title'])
+                  //  ->action('Notification Action', url('/'))
+                 //   ->line('Thank you for using our application!');
     }
 
     /**
@@ -55,7 +66,9 @@ class UserRegisteredNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'title' => 'mon titre est' . $this->post[
+                'title'
+            ], 'mon_email' =>$notifiable->email
         ];
     }
 }
